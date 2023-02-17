@@ -56,7 +56,7 @@ const span = (x, cls) => {
   return s;
 };
 
-const fillPredictions = (values) => {
+const fillTable = (values) => {
   times.replaceChildren(...['Minutes', 'Depart', 'Arrive'].map((s) => span(s, 'header')));
   const now = new Date();
   for (const v of values) {
@@ -69,9 +69,18 @@ const fillPredictions = (values) => {
   }
 };
 
-let predictions = await fetchPredictions();
+let predictions = null;
 
-setInterval(async () => {
+const update = async () => {
   predictions = await fetchPredictions();
-}, 30000);
-setInterval(() => fillPredictions(predictions), 1000);
+};
+const fill = () => {
+  fillTable(predictions);
+};
+
+// Kick things off
+update().then(fill);
+
+// Schedule polling of data and more frequent updating of countdowns
+setInterval(update, 30 * 1000);
+setInterval(fill, 1000);
