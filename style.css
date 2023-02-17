@@ -9,7 +9,30 @@ body {
   left: 10vw;
   width: 80vw;
   height: 80vh;
-  border: thin solid #ddd;
   text-align: center;
+  font-size: 6vmin;
   font-family: sans-serif;
+  background: #6688ff33;
+}
+
+h1 {
+  margin-bottom: 1rem;
+}
+
+#times {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  padding: 3px;
+  background: #ccc;
+}
+
+#times span {
+  background: #6699ff;
+  padding: 1rem;
+}
+
+#times span.late {
+  background: #aaa;
+  color: #ccc;
 }
