@@ -11,7 +11,12 @@ const extractPredictions = async (resp) => {
 
 const time = (p) => {
   const t = document.createElement('p');
-  t.append(`${p.prdctdn} minutes`);
+  const min = Number(p.prdctdn);
+  if (Number.isNaN(min)) {
+    t.append(p.prdctdn);
+  } else {
+    t.append(`${min} minute${min !== 1 ? 's' : ''}`);
+  }
   return t;
 };
 
@@ -20,7 +25,7 @@ const fetchPredictions = async () => {
   times.replaceChildren(...predictions.map(time));
 };
 
-const totalHeight = (e) => [...e.children].reduce((acc, c) => acc + c.offsetHeight, 0);
+const heightOfChildren = (e) => [...e.children].reduce((acc, c) => acc + c.offsetHeight, 0);
 
 await fetchPredictions();
 
@@ -28,7 +33,7 @@ const target = body.clientHeight * 0.8;
 
 for (let s = 0; s < 200; s++) {
   body.style.fontSize = `${s}px`;
-  if (totalHeight(body) > target) {
+  if (heightOfChildren(body) > target) {
     body.style.fontSize = `${s - 1}px`;
     break;
   }
