@@ -8,6 +8,7 @@ const millisToStop = 7 * 60 * 1000;
 const url = `https://api.actransit.org/transit/actrealtime/prediction?tmres=s&stpid=${leaveFrom},${arriveAt}&rt=51B&token=${token}`;
 
 const times = document.getElementById('times');
+const leave = document.getElementById('leave');
 
 const extractPredictions = async (resp) => {
   const data = await resp.json();
@@ -59,13 +60,30 @@ const span = (x, cls) => {
 const fillTable = (values) => {
   times.replaceChildren(...['Minutes', 'Depart', 'Arrive'].map((s) => span(s, 'header')));
   const now = new Date();
+
+  let i = 0;
+  do {
+    const nextDeparture = values[i].departure - now;
+    if (nextDeparture > millisToStop) {
+      const when = mmss(nextDeparture - millisToStop);
+      const departing = timeString(values[i].departure);
+      const arriving = timeString(values[i].arrival);
+
+      leave.innerHTML = `Leave in ${when} to catch the ${departing} bus arriving at BPC at ${arriving}.`;
+      break;
+    }
+    i++;
+  } while (i < values.length);
+
   for (const v of values) {
     const departIn = v.departure - now;
-    const cls = departIn < millisToStop ? 'late' : 'ok';
-    const millis = v.departure.getTime() - now;
-    times.append(span(mmss(millis), cls));
-    times.append(span(timeString(v.departure), cls));
-    times.append(span(timeString(v.arrival), cls));
+    if (departIn > 0) {
+      const cls = departIn < millisToStop ? 'late' : 'ok';
+      const millis = v.departure.getTime() - now;
+      times.append(span(mmss(millis), cls));
+      times.append(span(timeString(v.departure), cls));
+      times.append(span(timeString(v.arrival), cls));
+    }
   }
 };
 
