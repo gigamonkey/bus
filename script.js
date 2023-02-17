@@ -5,6 +5,8 @@ const arriveAt = '51105'; // University & 6th
 
 const millisToStop = 7 * 60 * 1000;
 
+document.body.onclick = (e) => e.currentTarget.requestFullscreen();
+
 const url = `https://api.actransit.org/transit/actrealtime/prediction?tmres=s&stpid=${leaveFrom},${arriveAt}&rt=51B&token=${token}`;
 
 const times = document.getElementById('times');
