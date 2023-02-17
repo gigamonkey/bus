@@ -36,3 +36,8 @@ h1 {
   background: #aaa;
   color: #ccc;
 }
+
+#times span.header {
+  font-weight: 600;
+  font-size: 75%;
+}
