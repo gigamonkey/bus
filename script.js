@@ -84,7 +84,7 @@ const timeString = (d) => {
   const m = d.getMinutes();
   const hh = ((h + 11) % 12) + 1;
   const mm = m.toString().padStart(2, '0');
-  const ampm = h > 12 ? 'pm' : 'am';
+  const ampm = h >= 12 ? 'pm' : 'am';
   return `${hh}:${mm} ${ampm}`;
 };
 
