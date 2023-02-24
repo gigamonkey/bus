@@ -29,6 +29,9 @@ html,
 }
 
 #times span {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background: #6699ff;
   padding: 0.75rem;
 }
@@ -40,5 +43,5 @@ html,
 
 #times span.header {
   font-weight: 600;
-  font-size: 75%;
+  font-size: 60%;
 }
