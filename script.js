@@ -9,7 +9,6 @@ const baseURL = 'https://api.actransit.org/transit/actrealtime';
 const url = `${baseURL}/prediction?tmres=s&stpid=${leaveFrom},${arriveAt}&rt=51B&token=${token}`;
 
 const times = document.getElementById('times');
-const leave = document.getElementById('leave');
 
 const fetchPredictions = async () => {
   const predictions = await fetch(url).then(extractPredictions).then(groupByVehicle);
@@ -49,34 +48,19 @@ const span = (x, cls) => {
 };
 
 const fillTable = (busses) => {
-  times.replaceChildren(...['Minutes', 'Depart', 'Arrive'].map((s) => span(s, 'header')));
+  times.replaceChildren(...['Leave in', 'Bus in', 'Departs', 'Arrives'].map((s) => span(s, 'header')));
   const now = new Date();
-
-  leave.innerHTML = leaveMessage(busses, now);
 
   for (const v of busses) {
     const departIn = v.departure - now;
     if (departIn > 0) {
       const cls = departIn < millisToStop ? 'late' : 'ok';
-      const millis = v.departure.getTime() - now;
-      times.append(span(mmss(millis), cls));
+      times.append(span(mmss(departIn - millisToStop), cls));
+      times.append(span(mmss(departIn), cls));
       times.append(span(timeString(v.departure), cls));
       times.append(span(timeString(v.arrival), cls));
     }
   }
-};
-
-const leaveMessage = (busses, now) => {
-  for (const bus of busses) {
-    const nextDeparture = bus.departure - now;
-    if (nextDeparture > millisToStop) {
-      const when = mmss(nextDeparture - millisToStop);
-      const departing = timeString(bus.departure);
-      const arriving = timeString(bus.arrival);
-      return `Leave in ${when} to catch the ${departing} bus arriving at BPC at ${arriving}.`;
-    }
-  }
-  return 'No busses!';
 };
 
 const timeString = (d) => {
@@ -89,10 +73,11 @@ const timeString = (d) => {
 };
 
 const mmss = (millis) => {
-  const seconds = Math.round(millis / 1000);
+  const sign = Math.sign(millis);
+  const seconds = Math.round(Math.abs(millis) / 1000);
   const minutes = Math.floor(seconds / 60);
   const ss = seconds % 60;
-  return `${minutes}:${ss.toString().padStart(2, '0')}`;
+  return `${sign < 0 ? '-' : ''}${minutes}:${ss.toString().padStart(2, '0')}`;
 };
 
 document.body.onclick = (e) => e.currentTarget.requestFullscreen();
