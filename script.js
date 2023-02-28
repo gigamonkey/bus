@@ -3,7 +3,7 @@ const token = '3F7F44FFEDE5D6A98FB4443BF380514F';
 const leaveFrom = '51583'; // University & California
 const arriveAt = '51105'; // University & 6th
 
-const millisToStop = 7 * 60 * 1000;
+const millisToStop = 10 * 60 * 1000;
 
 const baseURL = 'https://api.actransit.org/transit/actrealtime';
 const url = `${baseURL}/prediction?tmres=s&stpid=${leaveFrom},${arriveAt}&rt=51B&token=${token}`;
